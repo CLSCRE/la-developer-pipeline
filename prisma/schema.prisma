@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Developer {
+  id           String   @id @default(cuid())
+  name         String
+  normalizedName String @default("")
+  company      String?
+  email        String?
+  phone        String?
+  linkedinUrl  String?
+  website      String?
+  address      String?
+  entityType   String?  // LLC, Corp, Individual, etc.
+  sosStatus    String?  // Active, Suspended, etc.
+  notes        String?
+  pipelineStage String  @default("new") // new, contacted, in_discussion, proposal_sent, won, lost, dormant
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  projects     Project[]
+  outreachLogs OutreachLog[]
+  tags         DeveloperTag[]
+}
+
+model Project {
+  id              String   @id @default(cuid())
+  permitNumber    String   @unique
+  permitType      String   // Bldg-New, Bldg-Alter/Repair
+  status          String   // Submitted, Plan Check, Issued, etc.
+  pipelineStage   String   // entitlement, permitted, construction, completed
+  financingType   String   // predevelopment, construction, bridge, permanent
+  address         String
+  description     String?
+  valuation       Float?
+  units           Int?
+  stories         Int?
+  sqft            Float?
+  zoneCode        String?
+  generalPlanUse  String?
+  tocTier         String?
+  apn             String?
+  latitude        Float?
+  longitude       Float?
+  permitDate      DateTime?
+  issueDate       DateTime?
+  finalDate       DateTime?
+  contractor      String?
+  ownerName       String?
+  ownerAddress    String?
+  // Assessor enrichment fields
+  assessorUseType    String?  // e.g. "Single Family Residence"
+  assessorYearBuilt  String?
+  assessorSqftMain   Int?
+  assessorSqftLot    Int?
+  assessorBedrooms   Int?
+  assessorBathrooms  Int?
+  assessorLandValue  Float?
+  assessorImpValue   Float?
+  assessorExemption  String?
+  assessorLegalDesc  String?
+  assessorEnrichedAt DateTime?
+  source          String   @default("ladbs") // ladbs, costar, loopnet, manual
+  rawData         String?  // JSON blob of original API response
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  developerId     String?
+  developer       Developer? @relation(fields: [developerId], references: [id])
+  outreachLogs    OutreachLog[]
+}
+
+model OutreachLog {
+  id          String   @id @default(cuid())
+  type        String   // email, linkedin, phone, other
+  subject     String?
+  body        String?
+  status      String   @default("sent") // draft, sent, opened, replied, bounced
+  sentAt      DateTime?
+  openedAt    DateTime?
+  repliedAt   DateTime?
+  templateId  String?
+  campaignId  String?
+  createdAt   DateTime @default(now())
+
+  developerId String
+  developer   Developer @relation(fields: [developerId], references: [id])
+  projectId   String?
+  project     Project?  @relation(fields: [projectId], references: [id])
+}
+
+model DeveloperTag {
+  id          String   @id @default(cuid())
+  tag         String
+  createdAt   DateTime @default(now())
+
+  developerId String
+  developer   Developer @relation(fields: [developerId], references: [id])
+
+  @@unique([developerId, tag])
+}
+
+model ScrapeRun {
+  id          String   @id @default(cuid())
+  source      String   // ladbs, assessor, zimas, sos
+  status      String   @default("running") // running, completed, failed
+  recordsFound Int     @default(0)
+  recordsNew   Int     @default(0)
+  recordsUpdated Int   @default(0)
+  errorMessage String?
+  startedAt   DateTime @default(now())
+  completedAt DateTime?
+}
+
+model EmailTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  subject     String
+  body        String
+  stage       String   // entitlement, permitted, construction, completed
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AppSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+}
