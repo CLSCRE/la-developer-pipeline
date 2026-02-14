@@ -2,13 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Building2, LayoutDashboard, Map, Users, Settings, BarChart3 } from "lucide-react";
+import { Building2, LayoutDashboard, Map, Users, Settings, BarChart3, Target, GitMerge } from "lucide-react";
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/leads", label: "Leads", icon: Target },
   { href: "/projects", label: "Projects", icon: Building2 },
   { href: "/map", label: "Map", icon: Map },
   { href: "/developers", label: "Developers", icon: Users },
+  { href: "/dedup", label: "Dedup", icon: GitMerge },
   { href: "/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
@@ -43,7 +45,7 @@ export function Sidebar() {
         })}
       </nav>
       <div className="p-4 border-t border-slate-700">
-        <p className="text-xs text-slate-500">Phase 1 — LADBS Permits</p>
+        <p className="text-xs text-slate-500">Construction Financing Leads</p>
       </div>
     </aside>
   );

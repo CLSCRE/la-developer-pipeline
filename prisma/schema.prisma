@@ -19,8 +19,17 @@ model Developer {
   address      String?
   entityType   String?  // LLC, Corp, Individual, etc.
   sosStatus    String?  // Active, Suspended, etc.
+  contactEnrichedAt  DateTime?
+  sosEntityNumber    String?
+  sosRegistrationDate String?
+  sosAgentName       String?
+  sosAgentAddress    String?
+  googlePlacesUrl    String?
   notes        String?
   pipelineStage String  @default("new") // new, contacted, in_discussion, proposal_sent, won, lost, dormant
+  leadScore     Int?
+  leadScoreData String?  // JSON blob of score breakdown
+  leadScoreAt   DateTime?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -35,6 +44,7 @@ model Project {
   permitType      String   // Bldg-New, Bldg-Alter/Repair
   status          String   // Submitted, Plan Check, Issued, etc.
   pipelineStage   String   // entitlement, permitted, construction, completed
+  pipelineSubstage String? // submitted, plan_check, approved, ready_to_issue, issued, under_inspection, etc.
   financingType   String   // predevelopment, construction, bridge, permanent
   address         String
   description     String?

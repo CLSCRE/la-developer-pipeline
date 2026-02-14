@@ -8,7 +8,7 @@ export default function MapPage() {
   const [projects, setProjects] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch("/api/projects")
+    fetch("/api/projects?limit=50000")
       .then((res) => res.json())
       .then((data) => setProjects(data.projects));
   }, []);

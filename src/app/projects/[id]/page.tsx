@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { format } from "date-fns";
 import { ArrowLeft, Building2, MapPin, User, FileText, Search, RefreshCw, ExternalLink } from "lucide-react";
+import DeveloperLinker from "@/components/DeveloperLinker";
+import OutreachTimeline from "@/components/OutreachTimeline";
 
 const stageColors: Record<string, string> = {
   entitlement: "bg-amber-100 text-amber-800",
@@ -286,6 +288,24 @@ export default function ProjectDetailPage() {
         <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
           <h3 className="text-sm font-semibold text-slate-700 mb-3">Work Description</h3>
           <p className="text-sm text-slate-600 whitespace-pre-wrap">{project.description}</p>
+        </div>
+      )}
+
+      {/* Developer Linker */}
+      <DeveloperLinker
+        projectId={project.id}
+        currentDeveloper={project.developer}
+        ownerName={project.ownerName}
+        onLink={fetchProject}
+      />
+
+      {/* Outreach History */}
+      {project.outreachLogs && project.outreachLogs.length > 0 && (
+        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="px-5 py-4 border-b border-slate-200">
+            <h3 className="text-sm font-semibold text-slate-700">Outreach History ({project.outreachLogs.length})</h3>
+          </div>
+          <OutreachTimeline entries={project.outreachLogs} />
         </div>
       )}
 

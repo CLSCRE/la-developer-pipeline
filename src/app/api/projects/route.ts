@@ -27,10 +27,13 @@ export async function GET(request: NextRequest) {
   if (zoneCode) where.zoneCode = zoneCode;
   if (minValuation) where.valuation = { gte: parseFloat(minValuation) };
 
+  const limitParam = searchParams.get("limit") || "500";
+  const limit = Math.min(parseInt(limitParam) || 500, 50000);
+
   const projects = await prisma.project.findMany({
     where,
     orderBy: { permitDate: "desc" },
-    take: 500,
+    take: limit,
   });
 
   // Also get summary stats

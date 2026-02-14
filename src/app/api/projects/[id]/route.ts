@@ -10,7 +10,10 @@ export async function GET(
     where: { id },
     include: {
       developer: true,
-      outreachLogs: { orderBy: { createdAt: "desc" } },
+      outreachLogs: {
+        orderBy: { createdAt: "desc" },
+        include: { developer: { select: { id: true, name: true } } },
+      },
     },
   });
 
