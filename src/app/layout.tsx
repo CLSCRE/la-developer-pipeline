@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Sidebar } from "../components/Sidebar";
+import AuthProvider from "../components/AuthProvider";
+import AppShell from "../components/AppShell";
 
 export const metadata: Metadata = {
   title: "LA Developer Pipeline",
@@ -15,10 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <div className="flex h-screen">
-          <Sidebar />
-          <main className="flex-1 overflow-auto">{children}</main>
-        </div>
+        <AuthProvider>
+          <AppShell>{children}</AppShell>
+        </AuthProvider>
       </body>
     </html>
   );
