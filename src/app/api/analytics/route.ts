@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   // Pipeline funnel: count projects by stage
   const projects = await prisma.project.findMany({
